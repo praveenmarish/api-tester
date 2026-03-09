@@ -45,10 +45,305 @@
         background-clip: text;
       }
 
+      .header-expand-btn {
+        padding: 8px 12px;
+        background: white;
+        border: 1px solid #cbd5e0;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 16px;
+        color: #667eea;
+        transition: all 0.2s ease;
+      }
+
+      .header-expand-btn:hover {
+        background: #f7fafc;
+        border-color: #667eea;
+      }
+
       .main-content {
         display: flex;
         flex: 1;
         overflow: hidden;
+        flex-direction: row;
+        transition: flex-direction 0.3s ease;
+      }
+
+      .main-content.column {
+        flex-direction: column;
+      }
+
+      .sidebar {
+        width: 280px;
+        background: white;
+        border-right: 1px solid #e2e8f0;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        transition: all 0.3s ease;
+      }
+
+      .sidebar.collapsed {
+        width: 0;
+        border-right: none;
+        overflow: hidden;
+      }
+
+      .center-content {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        min-width: 0;
+      }
+
+      .curl-panel {
+        width: 350px;
+        background: white;
+        border-left: 1px solid #e2e8f0;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        transition: all 0.3s ease;
+      }
+
+      .curl-panel.collapsed {
+        width: 60px;
+      }
+
+      .curl-panel.collapsed .curl-header-panel {
+        flex-direction: column;
+        padding: 8px 4px;
+        gap: 8px;
+      }
+
+      .curl-panel.collapsed .curl-header-panel h4 {
+        writing-mode: horizontal-tb;
+        text-orientation: mixed;
+        margin: 0;
+        font-size: 14px;
+        white-space: nowrap;
+        letter-spacing: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+      }
+
+      .curl-panel.collapsed .curl-header-panel .curl-collapse-btn {
+        padding: 4px 6px;
+        font-size: 12px;
+        margin-top: 0;
+        width: 100%;
+      }
+
+      .curl-panel.collapsed .curl-content {
+        display: none;
+      }
+
+      .curl-header-panel {
+        padding: 12px 16px;
+        border-bottom: 1px solid #e2e8f0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: white;
+        flex-shrink: 0;
+      }
+
+      .curl-header-panel h4 {
+        margin: 0;
+        font-size: 13px;
+        font-weight: 600;
+        color: #2d3748;
+      }
+
+      .curl-collapse-btn {
+        padding: 4px 8px;
+        background: white;
+        border: 1px solid #cbd5e0;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 12px;
+        color: #667eea;
+        transition: all 0.2s ease;
+        writing-mode: horizontal-tb;
+      }
+
+      .curl-collapse-btn:hover {
+        background: #f7fafc;
+        border-color: #667eea;
+      }
+
+      .curl-content {
+        flex: 1;
+        overflow: auto;
+        padding: 16px;
+      }
+
+      .sidebar-header {
+        padding: 16px;
+        border-bottom: 1px solid #e2e8f0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .sidebar-header h3 {
+        font-size: 14px;
+        font-weight: 600;
+        color: #2d3748;
+        margin: 0;
+        flex: 1;
+      }
+
+      .sidebar-actions {
+        display: flex;
+        gap: 4px;
+      }
+
+      .sidebar-btn {
+        padding: 6px 8px;
+        background: white;
+        border: 1px solid #cbd5e0;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 12px;
+        color: #667eea;
+        transition: all 0.2s ease;
+      }
+
+      .sidebar-btn:hover {
+        background: #f7fafc;
+        border-color: #667eea;
+      }
+
+      .sidebar-content {
+        flex: 1;
+        overflow: auto;
+      }
+
+      .sidebar-list {
+        padding: 8px;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+
+      .sidebar-item {
+        padding: 10px 12px;
+        background: #f7fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        font-size: 13px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .sidebar-item:hover {
+        background: #edf2f7;
+        border-color: #cbd5e0;
+      }
+
+      .sidebar-item.active {
+        background: #667eea;
+        color: white;
+        border-color: #667eea;
+      }
+
+      .sidebar-item-content {
+        flex: 1;
+        cursor: pointer;
+        min-width: 0;
+      }
+
+      .sidebar-item-name {
+        font-weight: 500;
+        margin-bottom: 4px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .sidebar-item-method {
+        font-size: 11px;
+        background: rgba(0, 0, 0, 0.1);
+        padding: 2px 6px;
+        border-radius: 3px;
+        font-weight: 600;
+      }
+
+      .sidebar-item.active .sidebar-item-method {
+        background: rgba(255, 255, 255, 0.3);
+      }
+
+      .sidebar-item-url {
+        font-size: 11px;
+        color: #718096;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .sidebar-item.active .sidebar-item-url {
+        color: rgba(255, 255, 255, 0.8);
+      }
+
+      .context-menu {
+        position: fixed;
+        background: white;
+        border: 1px solid #cbd5e0;
+        border-radius: 6px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        z-index: 10000;
+        min-width: 150px;
+        overflow: hidden;
+      }
+
+      .context-menu-item {
+        padding: 10px 16px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 13px;
+        color: #2d3748;
+        transition: all 0.15s ease;
+        border: none;
+        background: none;
+        width: 100%;
+        text-align: left;
+      }
+
+      .context-menu-item:hover {
+        background: #f7fafc;
+        color: #667eea;
+      }
+
+      .context-menu-item.delete:hover {
+        background: #fff5f5;
+        color: #ff6b6b;
+      }
+
+      .context-menu-divider {
+        height: 1px;
+        background: #e2e8f0;
+        margin: 4px 0;
+      }
+
+      .sidebar-empty {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex: 1;
+        color: #a0aec0;
+        text-align: center;
+        padding: 24px 16px;
+        font-size: 13px;
       }
 
       .request-panel {
@@ -56,16 +351,31 @@
         display: flex;
         flex-direction: column;
         background: white;
-        border-right: 1px solid #e2e8f0;
+        border-bottom: 1px solid #e2e8f0;
         overflow: hidden;
+        min-height: 0;
       }
 
       .response-panel {
-        flex: 1;
+        flex: 0 0 300px;
         display: flex;
         flex-direction: column;
         background: #f8f9fa;
         overflow: hidden;
+        min-height: 150px;
+        user-select: none;
+      }
+
+      .response-resize-handle {
+        height: 6px;
+        background: #e2e8f0;
+        cursor: row-resize;
+        transition: background 0.2s ease;
+        flex-shrink: 0;
+      }
+
+      .response-resize-handle:hover {
+        background: #667eea;
       }
 
       .request-controls {
@@ -600,179 +910,285 @@
       #responseBody {
         display: block;
       }
+
+      .request-item-method {
+        background: #667eea;
+        color: white;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 11px;
+        font-weight: 600;
+        margin-right: 8px;
+      }
+
+      .request-item-actions {
+        display: flex;
+        gap: 4px;
+      }
+
+      .btn-action {
+        padding: 6px 10px;
+        background: white;
+        border: 1px solid #cbd5e0;
+        border-radius: 4px;
+        font-size: 12px;
+        cursor: pointer;
+        color: #718096;
+        transition: all 0.2s ease;
+      }
+
+      .btn-action:hover {
+        border-color: #667eea;
+        color: #667eea;
+      }
+
+      .btn-action.delete:hover {
+        border-color: #ff6b6b;
+        color: #ff6b6b;
+      }
+
+      .empty-list {
+        text-align: center;
+        padding: 32px 16px;
+        color: #718096;
+      }
+
+      .empty-list-icon {
+        font-size: 48px;
+        margin-bottom: 12px;
+      }
     </style>
   </head>
   <body>
     <div class="container">
       <div class="header">
+        <button
+          class="header-expand-btn"
+          id="toggleSidebarBtn"
+          title="Toggle sidebar"
+        >
+          ☰
+        </button>
         <h1>🚀 API Tester</h1>
       </div>
 
       <div class="main-content">
-        <!-- Request Panel -->
-        <div class="request-panel">
-          <div class="request-controls">
-            <div class="control-group">
-              <select id="method">
-                <option value="GET">GET</option>
-                <option value="POST" selected>POST</option>
-                <option value="PUT">PUT</option>
-                <option value="PATCH">PATCH</option>
-                <option value="DELETE">DELETE</option>
-              </select>
-              <input
-                type="text"
-                id="url"
-                placeholder="https://api.example.com/users"
-              />
-              <button class="btn-send" id="sendBtn">Send Request</button>
-            </div>
-          </div>
-
-          <div class="tabs">
-            <button class="tab active" data-tab="headers">Headers</button>
-            <button class="tab" data-tab="body">Body</button>
-          </div>
-
-          <!-- Headers Tab -->
-          <div id="headers" class="tab-content active scrollbar">
-            <div class="editor">
-              <div
-                id="headersList"
-                style="display: flex; flex-direction: column; gap: 12px"
-              ></div>
-              <button class="btn-add" onclick="addHeader()">
-                + Add Header
+        <!-- Sidebar with Saved Requests -->
+        <div class="sidebar">
+          <div class="sidebar-header">
+            <h3>Saved Requests</h3>
+            <div class="sidebar-actions">
+              <button
+                class="sidebar-btn"
+                id="sidebarSaveBtn"
+                title="Save current request"
+              >
+                💾
+              </button>
+              <button
+                class="sidebar-btn"
+                id="sidebarExportBtn"
+                title="Export all"
+              >
+                📥
+              </button>
+              <button
+                class="sidebar-btn"
+                id="sidebarImportBtn"
+                title="Import from JSON"
+              >
+                📤
               </button>
             </div>
           </div>
+          <div class="sidebar-content">
+            <div class="sidebar-list" id="sidebarList"></div>
+          </div>
+        </div>
 
-          <!-- Body Tab -->
-          <div id="body" class="tab-content scrollbar">
-            <div class="editor">
-              <div class="body-type-options">
-                <div class="body-type-option">
-                  <input
-                    type="radio"
-                    name="bodyType"
-                    value="json"
-                    checked
-                    id="bodyJson"
-                  />
-                  <label for="bodyJson">JSON</label>
-                </div>
-                <div class="body-type-option">
-                  <input
-                    type="radio"
-                    name="bodyType"
-                    value="form"
-                    id="bodyForm"
-                  />
-                  <label for="bodyForm">Form Data</label>
-                </div>
-                <div class="body-type-option">
-                  <input
-                    type="radio"
-                    name="bodyType"
-                    value="file"
-                    id="bodyFile"
-                  />
-                  <label for="bodyFile">File</label>
-                </div>
+        <!-- Center Content -->
+        <div class="center-content">
+          <!-- Request Panel -->
+          <div class="request-panel">
+            <div class="request-controls">
+              <div class="control-group">
+                <select id="method">
+                  <option value="GET">GET</option>
+                  <option value="POST" selected>POST</option>
+                  <option value="PUT">PUT</option>
+                  <option value="PATCH">PATCH</option>
+                  <option value="DELETE">DELETE</option>
+                </select>
+                <input
+                  type="text"
+                  id="url"
+                  placeholder="https://api.example.com/users"
+                />
+                <button class="btn-send" id="sendBtn">Send Request</button>
               </div>
+            </div>
 
-              <div id="jsonBodyEditor">
-                <textarea
-                  id="jsonBody"
-                  placeholder='{"key": "value"}'
-                  oninput="updateCurlDisplay()"
-                ></textarea>
-              </div>
+            <div class="tabs">
+              <button class="tab active" data-tab="headers">Headers</button>
+              <button class="tab" data-tab="body">Body</button>
+            </div>
 
-              <div
-                id="formBodyEditor"
-                style="display: none; flex-direction: column; gap: 12px"
-              >
+            <!-- Headers Tab -->
+            <div id="headers" class="tab-content active scrollbar">
+              <div class="editor">
                 <div
-                  id="formList"
+                  id="headersList"
                   style="display: flex; flex-direction: column; gap: 12px"
                 ></div>
-                <div style="display: flex; gap: 8px">
-                  <button class="btn-add" onclick="addFormField()">
-                    + Add Field
-                  </button>
-                  <button class="btn-add" onclick="addFormFileField()">
-                    + Add File
-                  </button>
-                </div>
+                <button class="btn-add" onclick="addHeader()">
+                  + Add Header
+                </button>
               </div>
+            </div>
 
-              <div id="fileBodyEditor" style="display: none">
-                <div class="file-drop-zone" id="fileDropZone">
-                  <div class="file-drop-zone-icon">📁</div>
-                  <div class="file-drop-zone-text">
-                    Click to select or drag & drop a file
+            <!-- Body Tab -->
+            <div id="body" class="tab-content scrollbar">
+              <div class="editor">
+                <div class="body-type-options">
+                  <div class="body-type-option">
+                    <input
+                      type="radio"
+                      name="bodyType"
+                      value="json"
+                      checked
+                      id="bodyJson"
+                    />
+                    <label for="bodyJson">JSON</label>
+                  </div>
+                  <div class="body-type-option">
+                    <input
+                      type="radio"
+                      name="bodyType"
+                      value="form"
+                      id="bodyForm"
+                    />
+                    <label for="bodyForm">Form Data</label>
+                  </div>
+                  <div class="body-type-option">
+                    <input
+                      type="radio"
+                      name="bodyType"
+                      value="file"
+                      id="bodyFile"
+                    />
+                    <label for="bodyFile">File</label>
                   </div>
                 </div>
+
+                <div id="jsonBodyEditor">
+                  <textarea
+                    id="jsonBody"
+                    placeholder='{"key": "value"}'
+                    oninput="updateCurlDisplay()"
+                  ></textarea>
+                </div>
+
                 <div
-                  id="fileInfo"
-                  style="
-                    display: none;
-                    margin-top: 16px;
-                    padding: 12px;
-                    background: #c6f6d5;
-                    border: 1px solid #9ae6b4;
-                    border-radius: 6px;
-                    color: #22543d;
-                  "
+                  id="formBodyEditor"
+                  style="display: none; flex-direction: column; gap: 12px"
                 >
-                  <div style="font-size: 13px">
-                    <strong>Selected:</strong> <span id="fileName"></span>
+                  <div
+                    id="formList"
+                    style="display: flex; flex-direction: column; gap: 12px"
+                  ></div>
+                  <div style="display: flex; gap: 8px">
+                    <button class="btn-add" onclick="addFormField()">
+                      + Add Field
+                    </button>
+                    <button class="btn-add" onclick="addFormFileField()">
+                      + Add File
+                    </button>
                   </div>
                 </div>
-                <input type="file" id="fileInput" />
+
+                <div id="fileBodyEditor" style="display: none">
+                  <div class="file-drop-zone" id="fileDropZone">
+                    <div class="file-drop-zone-icon">📁</div>
+                    <div class="file-drop-zone-text">
+                      Click to select or drag & drop a file
+                    </div>
+                  </div>
+                  <div
+                    id="fileInfo"
+                    style="
+                      display: none;
+                      margin-top: 16px;
+                      padding: 12px;
+                      background: #c6f6d5;
+                      border: 1px solid #9ae6b4;
+                      border-radius: 6px;
+                      color: #22543d;
+                    "
+                  >
+                    <div style="font-size: 13px">
+                      <strong>Selected:</strong> <span id="fileName"></span>
+                    </div>
+                  </div>
+                  <input type="file" id="fileInput" />
+                </div>
               </div>
+            </div>
+          </div>
+          <!-- Response Resize Handle -->
+          <div class="response-resize-handle" id="responseResizeHandle"></div>
+
+          <!-- Response Panel -->
+          <div class="response-panel">
+            <div
+              class="response-header"
+              style="
+                padding: 12px 16px;
+                border-bottom: 1px solid #e2e8f0;
+                background: #f8f9fa;
+              "
+            >
+              <h3
+                style="
+                  margin: 0;
+                  font-size: 13px;
+                  font-weight: 600;
+                  color: #2d3748;
+                "
+              >
+                📊 Response
+              </h3>
+            </div>
+            <div class="response-content scrollbar" id="responseContent">
+              <div class="empty-state" id="emptyState">
+                <div class="empty-state-content">
+                  <div class="empty-state-icon">📨</div>
+                  <div class="empty-state-text">
+                    Send a request to see the response
+                  </div>
+                </div>
+              </div>
+              <div
+                id="responseBody"
+                style="display: none; flex: 1; overflow: auto"
+              ></div>
             </div>
           </div>
         </div>
 
-        <!-- Response Panel -->
-        <div class="response-panel">
-          <div
-            class="response-header"
-            style="
-              display: flex;
-              justify-content: space-between;
-              align-items: center;
-            "
-          >
-            <h3>Response</h3>
-            <div class="response-tabs" style="display: flex; gap: 8px">
-              <button class="response-tab" data-response-tab="response">
-                📊 Response
-              </button>
-              <button class="response-tab active" data-response-tab="curl">
-                💻 cURL
-              </button>
-            </div>
-          </div>
-          <div class="response-content scrollbar" id="responseContent">
-            <div class="empty-state" id="emptyState">
-              <div class="empty-state-content">
-                <div class="empty-state-icon">📨</div>
-                <div class="empty-state-text">
-                  Send a request to see the response
-                </div>
-              </div>
-            </div>
-            <div
-              id="responseBody"
-              style="display: none; flex: 1; overflow: auto"
-            ></div>
-            <div
-              id="responseCurl"
-              style="display: block; flex: 1; overflow: auto; padding: 24px"
+        <!-- cURL Panel (Right Side) -->
+        <div class="curl-panel" id="curlPanel">
+          <div class="curl-header-panel">
+            <h4>💻 cURL</h4>
+            <button
+              class="curl-collapse-btn"
+              id="curlCollapseBtn"
+              title="Collapse"
             >
+              ◀
+            </button>
+          </div>
+          <div class="curl-content">
+            <div id="responseCurl" style="display: block">
               <div class="curl-box">
                 <div class="curl-header">
                   <div class="curl-header-title">cURL Command</div>
@@ -1036,6 +1452,241 @@
           });
       }
 
+      // Save/Load Request Functions
+      function getCurrentRequestData() {
+        try {
+          const bodyTypeElement = document.querySelector(
+            'input[name="bodyType"]:checked',
+          );
+          if (!bodyTypeElement) {
+            console.error("Body type element not found");
+            throw new Error("Body type not found");
+          }
+
+          return {
+            method: document.getElementById("method").value,
+            url: document.getElementById("url").value,
+            headers: JSON.parse(JSON.stringify(headers)),
+            bodyType: bodyTypeElement.value,
+            jsonBody: document.getElementById("jsonBody").value,
+            formFields: JSON.parse(JSON.stringify(formFields)),
+          };
+        } catch (error) {
+          console.error("Error getting request data:", error);
+          throw error;
+        }
+      }
+
+      function loadRequestData(data) {
+        document.getElementById("method").value = data.method;
+        document.getElementById("url").value = data.url;
+        headers = JSON.parse(JSON.stringify(data.headers));
+        renderHeaders();
+        document.querySelector(
+          `input[name="bodyType"][value="${data.bodyType}"]`,
+        ).checked = true;
+        document.getElementById("jsonBody").value = data.jsonBody || "";
+        formFields = JSON.parse(JSON.stringify(data.formFields || []));
+        renderFormFields();
+        updateCurlDisplay();
+
+        // Trigger body type change to show correct editor
+        const bodyTypeEvent = new Event("change", { bubbles: true });
+        document
+          .querySelector(`input[name="bodyType"][value="${data.bodyType}"]`)
+          .dispatchEvent(bodyTypeEvent);
+      }
+
+      function saveRequest() {
+        try {
+          const name = prompt("Enter request name:");
+          if (!name || !name.trim()) {
+            return;
+          }
+
+          const requestData = getCurrentRequestData();
+          const requests = JSON.parse(
+            localStorage.getItem("savedRequests") || "{}",
+          );
+          requests[name] = requestData;
+          localStorage.setItem("savedRequests", JSON.stringify(requests));
+
+          alert(`Request "${name}" saved successfully!`);
+          updateLoadList();
+        } catch (error) {
+          console.error("Error saving request:", error);
+          alert("Error saving request: " + error.message);
+        }
+      }
+
+      function loadRequest(name) {
+        const requests = JSON.parse(
+          localStorage.getItem("savedRequests") || "{}",
+        );
+        if (requests[name]) {
+          loadRequestData(requests[name]);
+        }
+      }
+
+      function deleteRequest(name) {
+        if (confirm(`Delete request "${name}"?`)) {
+          const requests = JSON.parse(
+            localStorage.getItem("savedRequests") || "{}",
+          );
+          delete requests[name];
+          localStorage.setItem("savedRequests", JSON.stringify(requests));
+          updateLoadList();
+        }
+      }
+
+      function showItemMenu(event, name) {
+        event.preventDefault();
+
+        // Remove existing menu if any
+        const existingMenu = document.querySelector(".context-menu");
+        if (existingMenu) existingMenu.remove();
+
+        // Create menu
+        const menu = document.createElement("div");
+        menu.className = "context-menu";
+        menu.innerHTML = `
+                <button class="context-menu-item" onclick="updateRequest('${name}')">
+                    ✎ Update
+                </button>
+                <div class="context-menu-divider"></div>
+                <button class="context-menu-item delete" onclick="deleteRequest('${name}')">
+                    🗑 Delete
+                </button>
+            `;
+
+        // Position menu at cursor
+        menu.style.left = event.clientX + "px";
+        menu.style.top = event.clientY + "px";
+        document.body.appendChild(menu);
+
+        // Close menu when clicking elsewhere
+        const closeMenu = () => {
+          menu.remove();
+          document.removeEventListener("click", closeMenu);
+        };
+        setTimeout(() => {
+          document.addEventListener("click", closeMenu);
+        }, 0);
+      }
+
+      function updateRequest(name) {
+        try {
+          const requests = JSON.parse(
+            localStorage.getItem("savedRequests") || "{}",
+          );
+          if (!requests[name]) {
+            alert("Request not found");
+            return;
+          }
+
+          // Get current request data
+          const currentData = getCurrentRequestData();
+
+          // Update the saved request
+          requests[name] = currentData;
+          localStorage.setItem("savedRequests", JSON.stringify(requests));
+          updateLoadList();
+          alert(`Request "${name}" updated successfully!`);
+        } catch (error) {
+          console.error("Error updating request:", error);
+          alert("Error updating request: " + error.message);
+        }
+      }
+
+      function updateLoadList() {
+        try {
+          const requests = JSON.parse(
+            localStorage.getItem("savedRequests") || "{}",
+          );
+          const sidebarList = document.getElementById("sidebarList");
+
+          if (!sidebarList) {
+            console.error("Sidebar list element not found");
+            return;
+          }
+
+          if (Object.keys(requests).length === 0) {
+            sidebarList.innerHTML = `<div class="sidebar-empty">No saved requests</div>`;
+            return;
+          }
+
+          // Update sidebar only
+          const sidebarItemsHtml = Object.keys(requests)
+            .map((name) => {
+              const req = requests[name];
+              return `
+                        <div class="sidebar-item" oncontextmenu="showItemMenu(event, '${name}')">
+                            <div class="sidebar-item-content" onclick="loadRequest('${name}')">
+                                <div class="sidebar-item-name">
+                                    ${name}
+                                    <span class="sidebar-item-method">${req.method}</span>
+                                </div>
+                                <div class="sidebar-item-url">${req.url}</div>
+                            </div>
+                        </div>
+                    `;
+            })
+            .join("");
+          sidebarList.innerHTML = sidebarItemsHtml;
+        } catch (error) {
+          console.error("Error updating load list:", error);
+        }
+      }
+
+      function exportRequests() {
+        const requests = localStorage.getItem("savedRequests") || "{}";
+        const dataStr = requests;
+        const dataBlob = new Blob([dataStr], { type: "application/json" });
+        const url = URL.createObjectURL(dataBlob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = `api-requests-${new Date().toISOString().split("T")[0]}.json`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+      }
+
+      function importRequests() {
+        try {
+          const file = document.getElementById("importInput").files[0];
+          if (!file) {
+            console.log("No file selected");
+            return;
+          }
+
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            try {
+              const imported = JSON.parse(e.target.result);
+              const current = JSON.parse(
+                localStorage.getItem("savedRequests") || "{}",
+              );
+              const merged = { ...current, ...imported };
+              localStorage.setItem("savedRequests", JSON.stringify(merged));
+              updateLoadList();
+              alert("Requests imported successfully!");
+            } catch (error) {
+              console.error("Error parsing JSON:", error);
+              alert("Error importing file: " + error.message);
+            }
+          };
+          reader.onerror = () => {
+            alert("Error reading file");
+          };
+          reader.readAsText(file);
+          document.getElementById("importInput").value = "";
+        } catch (error) {
+          console.error("Error in importRequests:", error);
+          alert("Error: " + error.message);
+        }
+      }
+
       // Send request
       document.getElementById("sendBtn").addEventListener("click", async () => {
         const method = document.getElementById("method").value;
@@ -1239,6 +1890,51 @@
         }
       });
 
+      // Sidebar button listeners
+      const sidebarSaveBtn = document.getElementById("sidebarSaveBtn");
+      const sidebarExportBtn = document.getElementById("sidebarExportBtn");
+      const toggleSidebarBtn = document.getElementById("toggleSidebarBtn");
+
+      if (sidebarSaveBtn) {
+        sidebarSaveBtn.addEventListener("click", () => {
+          saveRequest();
+        });
+      }
+
+      if (sidebarExportBtn) {
+        sidebarExportBtn.addEventListener("click", () => {
+          const requests = JSON.parse(
+            localStorage.getItem("savedRequests") || "{}",
+          );
+          if (Object.keys(requests).length === 0) {
+            alert("No saved requests to export");
+            return;
+          }
+          exportRequests();
+        });
+      }
+
+      const sidebarImportBtn = document.getElementById("sidebarImportBtn");
+      if (sidebarImportBtn) {
+        sidebarImportBtn.addEventListener("click", () => {
+          document.getElementById("importInput").click();
+        });
+      }
+
+      const importInput = document.getElementById("importInput");
+      if (importInput) {
+        importInput.addEventListener("change", () => {
+          importRequests();
+        });
+      }
+
+      if (toggleSidebarBtn) {
+        toggleSidebarBtn.addEventListener("click", () => {
+          const sidebar = document.querySelector(".sidebar");
+          sidebar.classList.toggle("collapsed");
+        });
+      }
+
       // Response tab toggle with event delegation
       document.addEventListener("click", function (e) {
         if (e.target.classList.contains("response-tab")) {
@@ -1303,10 +1999,68 @@
       });
       formObserver.observe(formList, { childList: true, subtree: true });
 
+      // Resize handle for response panel height
+      const responseResizeHandle = document.getElementById(
+        "responseResizeHandle",
+      );
+      const responsePanel = document.querySelector(".response-panel");
+      const centerContent = document.querySelector(".center-content");
+      let isResizingResponse = false;
+
+      if (responseResizeHandle) {
+        responseResizeHandle.addEventListener("mousedown", (e) => {
+          isResizingResponse = true;
+          e.preventDefault();
+        });
+
+        document.addEventListener("mousemove", (e) => {
+          if (!isResizingResponse) return;
+
+          const centerRect = centerContent.getBoundingClientRect();
+          const newHeight = centerRect.bottom - e.clientY;
+          const minHeight = 150;
+          const maxHeight = centerRect.height - 100;
+
+          if (newHeight >= minHeight && newHeight <= maxHeight) {
+            responsePanel.style.flex = `0 0 ${newHeight}px`;
+          }
+        });
+
+        document.addEventListener("mouseup", () => {
+          isResizingResponse = false;
+        });
+      }
+
+      // cURL collapse/expand
+      const curlCollapseBtn = document.getElementById("curlCollapseBtn");
+      const curlPanel = document.getElementById("curlPanel");
+      if (curlCollapseBtn) {
+        curlCollapseBtn.addEventListener("click", () => {
+          curlPanel.classList.toggle("collapsed");
+          if (curlPanel.classList.contains("collapsed")) {
+            curlCollapseBtn.textContent = "▶";
+            curlCollapseBtn.title = "Expand";
+          } else {
+            curlCollapseBtn.textContent = "◀";
+            curlCollapseBtn.title = "Collapse";
+          }
+        });
+      }
+
       // Initialize
       renderHeaders();
       renderFormFields();
       updateCurlDisplay();
+      updateLoadList();
     </script>
+
+    <!-- Hidden file input for import -->
+    <input
+      type="file"
+      id="importInput"
+      style="display: none"
+      accept=".json"
+      onchange="importRequests()"
+    />
   </body>
 </html>
