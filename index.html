@@ -615,7 +615,7 @@
             <div class="control-group">
               <select id="method">
                 <option value="GET">GET</option>
-                <option value="POST">POST</option>
+                <option value="POST" selected>POST</option>
                 <option value="PUT">PUT</option>
                 <option value="PATCH">PATCH</option>
                 <option value="DELETE">DELETE</option>
@@ -625,17 +625,7 @@
                 id="url"
                 placeholder="https://api.example.com/users"
               />
-              <button class="btn-send" id="sendBtn">Send</button>
-              <button
-                class="btn-send"
-                id="curlPreviewBtn"
-                style="
-                  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-                  padding: 10px 20px;
-                "
-              >
-                cURL
-              </button>
+              <button class="btn-send" id="sendBtn">Send Request</button>
             </div>
           </div>
 
@@ -695,6 +685,7 @@
                 <textarea
                   id="jsonBody"
                   placeholder='{"key": "value"}'
+                  oninput="updateCurlDisplay()"
                 ></textarea>
               </div>
 
@@ -756,11 +747,11 @@
             "
           >
             <h3>Response</h3>
-            <div class="response-tabs" style="display: none; gap: 8px">
-              <button class="response-tab active" data-response-tab="response">
+            <div class="response-tabs" style="display: flex; gap: 8px">
+              <button class="response-tab" data-response-tab="response">
                 📊 Response
               </button>
-              <button class="response-tab" data-response-tab="curl">
+              <button class="response-tab active" data-response-tab="curl">
                 💻 cURL
               </button>
             </div>
@@ -780,8 +771,22 @@
             ></div>
             <div
               id="responseCurl"
-              style="display: none; flex: 1; overflow: auto"
-            ></div>
+              style="display: block; flex: 1; overflow: auto; padding: 24px"
+            >
+              <div class="curl-box">
+                <div class="curl-header">
+                  <div class="curl-header-title">cURL Command</div>
+                  <button
+                    class="btn-small"
+                    onclick="copyCurl()"
+                    style="border-color: #667eea; color: #667eea"
+                  >
+                    📋 Copy
+                  </button>
+                </div>
+                <div class="curl-body" id="curlOutput"></div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -792,6 +797,60 @@
       let formFields = [];
       let selectedFile = null;
       let formFileFields = {};
+
+      // Generate curl command (define early so it's available for all handlers)
+      function generateCurl() {
+        const method = document.getElementById("method").value;
+        const url = document.getElementById("url").value;
+        let curl = `curl -X ${method} "${url}"`;
+
+        // Add headers
+        headers.forEach((h) => {
+          if (h.key && h.value) {
+            curl += ` \\\n  -H "${h.key}: ${h.value}"`;
+          }
+        });
+
+        // Add body
+        const bodyType = document.querySelector(
+          'input[name="bodyType"]:checked',
+        ).value;
+        if (method !== "GET" && method !== "DELETE") {
+          if (bodyType === "json") {
+            const jsonBody = document.getElementById("jsonBody").value.trim();
+            if (jsonBody) {
+              // Add Content-Type header for JSON if not already present
+              const hasContentType = headers.some(
+                (h) => h.key && h.key.toLowerCase() === "content-type",
+              );
+              if (!hasContentType) {
+                curl += ` \\\n  -H "Content-Type: application/json"`;
+              }
+              // Escape single quotes in JSON by replacing ' with '\''
+              const escapedJson = jsonBody.replace(/'/g, "'\\''");
+              curl += ` \\\n  -d '${escapedJson}'`;
+            }
+          } else if (bodyType === "form") {
+            formFields.forEach((f, i) => {
+              if (f.type === "file" && formFileFields[i]) {
+                curl += ` \\\n  -F "${f.key}=@${formFileFields[i].name}"`;
+              } else if (f.type === "text" && f.key && f.value) {
+                curl += ` \\\n  -F "${f.key}=${f.value}"`;
+              }
+            });
+          } else if (bodyType === "file" && selectedFile) {
+            curl += ` \\\n  -F "file=@${selectedFile.name}"`;
+          }
+        }
+
+        return curl;
+      }
+
+      // Function to update curl display in real-time (define early so it's available for all handlers)
+      function updateCurlDisplay() {
+        const curl = generateCurl();
+        document.getElementById("curlOutput").textContent = curl;
+      }
 
       // File upload handling for main file body
       const fileDropZone = document.getElementById("fileDropZone");
@@ -812,6 +871,7 @@
           if (e.dataTransfer.files.length > 0) {
             selectedFile = e.dataTransfer.files[0];
             updateFileInfo();
+            updateCurlDisplay();
           }
         });
 
@@ -819,6 +879,7 @@
           if (e.target.files.length > 0) {
             selectedFile = e.target.files[0];
             updateFileInfo();
+            updateCurlDisplay();
           }
         });
       }
@@ -871,9 +932,9 @@
             (h, i) => `
                 <div class="editor-row">
                     <input type="text" placeholder="Key" value="${h.key}" 
-                        onchange="headers[${i}].key = this.value" />
+                        onchange="headers[${i}].key = this.value; updateCurlDisplay();" />
                     <input type="text" placeholder="Value" value="${h.value}" 
-                        onchange="headers[${i}].value = this.value" />
+                        onchange="headers[${i}].value = this.value; updateCurlDisplay();" />
                     <button class="btn-small" onclick="deleteHeader(${i})">Delete</button>
                 </div>
             `,
@@ -899,11 +960,11 @@
               return `
                         <div class="editor-row file-row">
                             <input type="text" placeholder="Field Name" value="${f.key}" 
-                                onchange="formFields[${i}].key = this.value" />
+                                onchange="formFields[${i}].key = this.value; updateCurlDisplay();" />
                             <div class="file-input-wrapper">
                                 <label class="file-label">
                                     📎 ${formFileFields[i]?.name || "Choose File"}
-                                    <input type="file" onchange="selectFormFile(${i}, this.files[0])" />
+                                    <input type="file" onchange="selectFormFile(${i}, this.files[0]); updateCurlDisplay();" />
                                 </label>
                             </div>
                             <button class="btn-small" onclick="deleteFormField(${i})">Delete</button>
@@ -913,9 +974,9 @@
               return `
                         <div class="editor-row">
                             <input type="text" placeholder="Key" value="${f.key}" 
-                                onchange="formFields[${i}].key = this.value" />
+                                onchange="formFields[${i}].key = this.value; updateCurlDisplay();" />
                             <input type="text" placeholder="Value" value="${f.value}" 
-                                onchange="formFields[${i}].value = this.value" />
+                                onchange="formFields[${i}].value = this.value; updateCurlDisplay();" />
                             <button class="btn-small" onclick="deleteFormField(${i})">Delete</button>
                         </div>
                     `;
@@ -927,6 +988,7 @@
       function addFormField() {
         formFields.push({ type: "text", key: "", value: "" });
         renderFormFields();
+        updateCurlDisplay();
       }
 
       function addFormFileField() {
@@ -934,55 +996,20 @@
         formFields.push({ type: "file", key: "" });
         formFileFields[index] = null;
         renderFormFields();
+        updateCurlDisplay();
       }
 
       function selectFormFile(index, file) {
         formFileFields[index] = file;
         renderFormFields();
+        updateCurlDisplay();
       }
 
       function deleteFormField(i) {
         formFields.splice(i, 1);
         delete formFileFields[i];
         renderFormFields();
-      }
-
-      function generateCurl() {
-        const method = document.getElementById("method").value;
-        const url = document.getElementById("url").value;
-        let curl = `curl -X ${method} "${url}"`;
-
-        // Add headers
-        headers.forEach((h) => {
-          if (h.key && h.value) {
-            curl += ` \\\n  -H "${h.key}: ${h.value}"`;
-          }
-        });
-
-        // Add body
-        const bodyType = document.querySelector(
-          'input[name="bodyType"]:checked',
-        ).value;
-        if (method !== "GET" && method !== "DELETE") {
-          if (bodyType === "json") {
-            const jsonBody = document.getElementById("jsonBody").value;
-            if (jsonBody) {
-              curl += ` \\\n  -d '${jsonBody}'`;
-            }
-          } else if (bodyType === "form") {
-            formFields.forEach((f, i) => {
-              if (f.type === "file" && formFileFields[i]) {
-                curl += ` \\\n  -F "${f.key}=@${formFileFields[i].name}"`;
-              } else if (f.type === "text" && f.key && f.value) {
-                curl += ` \\\n  -F "${f.key}=${f.value}"`;
-              }
-            });
-          } else if (bodyType === "file" && selectedFile) {
-            curl += ` \\\n  -F "file=@${selectedFile.name}"`;
-          }
-        }
-
-        return curl;
+        updateCurlDisplay();
       }
 
       function copyCurl() {
@@ -1091,10 +1118,12 @@
                                 <div class="curl-header-title">cURL Command</div>
                                 <button class="btn-small" onclick="copyCurl()" style="border-color: #667eea; color: #667eea;">📋 Copy</button>
                             </div>
-                            <div class="curl-body">${generateCurl()}</div>
+                            <div class="curl-body" id="responseCurlBody"></div>
                         </div>
                     </div>
                 `;
+          document.getElementById("responseCurlBody").textContent =
+            generateCurl();
 
           // Set response body content
           document.getElementById("responseBody").innerHTML = `
@@ -1143,22 +1172,29 @@
                                 <div class="curl-header-title">cURL Command</div>
                                 <button class="btn-small" onclick="copyCurl()" style="border-color: #667eea; color: #667eea;">📋 Copy</button>
                             </div>
-                            <div class="curl-body">${generateCurl()}</div>
+                            <div class="curl-body" id="responseCurlBodyError"></div>
                         </div>
                     </div>
                 `;
+          document.getElementById("responseCurlBodyError").textContent =
+            generateCurl();
 
           // Set response body content with error
-          document.getElementById("responseBody").innerHTML = `
+          const errorMsg = document.createElement("div");
+          errorMsg.innerHTML = `
                     <div style="padding: 24px; display: flex; flex-direction: column;">
                         <div class="response-meta">
                             <div class="meta-item" style="grid-column: 1 / -1;">
                                 <div class="meta-label">Error</div>
-                                <div class="response-status error">${error.message}</div>
+                                <div class="response-status error"></div>
                             </div>
                         </div>
                     </div>
                 `;
+          errorMsg.querySelector(".response-status").textContent =
+            error.message;
+          document.getElementById("responseBody").innerHTML =
+            errorMsg.innerHTML;
 
           // Show response tab by default
           document.getElementById("responseBody").style.display = "block";
@@ -1171,63 +1207,78 @@
             .classList.add("active");
         } finally {
           sendBtn.classList.remove("loading");
-          sendBtn.textContent = "Send";
+          sendBtn.textContent = "Send Request";
         }
       });
 
-      // Curl preview button
-      document
-        .getElementById("curlPreviewBtn")
-        .addEventListener("click", () => {
-          const curl = generateCurl();
-          document.getElementById("emptyState").style.display = "none";
-          document.getElementById("responseBody").style.display = "none";
-          document.getElementById("responseCurl").style.display = "block";
-          document.querySelector(".response-tabs").style.display = "flex";
+      // Response tab toggle with event delegation
+      document.addEventListener("click", function (e) {
+        if (e.target.classList.contains("response-tab")) {
+          const tabType = e.target.dataset.responseTab;
+          const responseTabs = document.querySelectorAll(".response-tab");
+          responseTabs.forEach((t) => t.classList.remove("active"));
+          e.target.classList.add("active");
 
-          document.getElementById("responseCurl").innerHTML = `
-                <div style="padding: 24px; height: 100%; display: flex; flex-direction: column;">
-                    <div class="curl-box" style="margin: 0;">
-                        <div class="curl-header">
-                            <div class="curl-header-title">cURL Command Preview</div>
-                            <button class="btn-small" onclick="copyCurl()" style="border-color: #667eea; color: #667eea;">📋 Copy</button>
-                        </div>
-                        <div class="curl-body">${curl}</div>
-                    </div>
-                </div>
-            `;
-
-          // Update active tab
-          document
-            .querySelectorAll(".response-tab")
-            .forEach((tab) => tab.classList.remove("active"));
-          document
-            .querySelector('[data-response-tab="curl"]')
-            .classList.add("active");
-        });
-
-      // Response tab toggle
-      document.querySelectorAll(".response-tab").forEach((tab) => {
-        tab.addEventListener("click", () => {
-          const tabType = tab.dataset.responseTab;
-          document
-            .querySelectorAll(".response-tab")
-            .forEach((t) => t.classList.remove("active"));
-          tab.classList.add("active");
+          const responseBody = document.getElementById("responseBody");
+          const responseCurl = document.getElementById("responseCurl");
 
           if (tabType === "response") {
-            document.getElementById("responseCurl").style.display = "none";
-            document.getElementById("responseBody").style.display = "block";
+            responseCurl.style.display = "none";
+            responseBody.style.display = "block";
           } else if (tabType === "curl") {
-            document.getElementById("responseBody").style.display = "none";
-            document.getElementById("responseCurl").style.display = "block";
+            responseBody.style.display = "none";
+            responseCurl.style.display = "block";
           }
-        });
+        }
       });
+
+      // Update curl when form changes
+      document
+        .getElementById("method")
+        .addEventListener("change", updateCurlDisplay);
+      document
+        .getElementById("url")
+        .addEventListener("input", updateCurlDisplay);
+      document
+        .getElementById("jsonBody")
+        .addEventListener("input", updateCurlDisplay);
+
+      // Update curl when headers change
+      const originalAddHeader = window.addHeader;
+      window.addHeader = function () {
+        originalAddHeader();
+        updateCurlDisplay();
+      };
+
+      const originalDeleteHeader = window.deleteHeader;
+      window.deleteHeader = function (i) {
+        originalDeleteHeader(i);
+        updateCurlDisplay();
+      };
+
+      // Update curl when body type changes
+      document.querySelectorAll('input[name="bodyType"]').forEach((radio) => {
+        radio.addEventListener("change", updateCurlDisplay);
+      });
+
+      // Create observer to watch for dynamic header changes
+      const headersList = document.getElementById("headersList");
+      const headerObserver = new MutationObserver(() => {
+        updateCurlDisplay();
+      });
+      headerObserver.observe(headersList, { childList: true, subtree: true });
+
+      // Create observer to watch for dynamic form field changes
+      const formList = document.getElementById("formList");
+      const formObserver = new MutationObserver(() => {
+        updateCurlDisplay();
+      });
+      formObserver.observe(formList, { childList: true, subtree: true });
 
       // Initialize
       renderHeaders();
       renderFormFields();
+      updateCurlDisplay();
     </script>
   </body>
 </html>
