@@ -798,6 +798,13 @@
       let selectedFile = null;
       let formFileFields = {};
 
+      // Helper function to escape HTML special characters
+      function escapeHtml(text) {
+        const div = document.createElement("div");
+        div.textContent = text;
+        return div.innerHTML;
+      }
+
       // Generate curl command (define early so it's available for all handlers)
       function generateCurl() {
         const method = document.getElementById("method").value;
@@ -1179,22 +1186,43 @@
           document.getElementById("responseCurlBodyError").textContent =
             generateCurl();
 
+          // Detect if it's a CORS error
+          const isCorsError =
+            error.message.includes("Failed to fetch") ||
+            error.message.includes("CORS") ||
+            error.message.includes("Access-Control");
+
           // Set response body content with error
-          const errorMsg = document.createElement("div");
-          errorMsg.innerHTML = `
-                    <div style="padding: 24px; display: flex; flex-direction: column;">
+          let errorContent = `
+                    <div style="padding: 24px; display: flex; flex-direction: column; gap: 16px;">
                         <div class="response-meta">
                             <div class="meta-item" style="grid-column: 1 / -1;">
                                 <div class="meta-label">Error</div>
-                                <div class="response-status error"></div>
+                                <div class="response-status error" style="white-space: pre-wrap; word-break: break-word;">${escapeHtml(error.message)}</div>
                             </div>
                         </div>
+                        ${
+                          isCorsError
+                            ? `
+                        <div style="background: #fed7d7; border: 1px solid #fc8181; border-radius: 8px; padding: 16px; color: #742a2a;">
+                            <div style="font-weight: 600; margin-bottom: 8px;">💡 CORS Issue Detected</div>
+                            <div style="font-size: 13px; line-height: 1.6;">
+                                <p>The server is blocking cross-origin requests. This is a server configuration issue.</p>
+                                <p><strong>Solutions:</strong></p>
+                                <ul style="margin: 8px 0; padding-left: 20px;">
+                                    <li>Ask your server admin to enable CORS headers</li>
+                                    <li>Required header: <code style="background: rgba(0,0,0,0.2); padding: 2px 6px; border-radius: 3px;">Access-Control-Allow-Origin: *</code></li>
+                                    <li>You can test this request using cURL instead (copy the command above)</li>
+                                </ul>
+                            </div>
+                        </div>
+                        `
+                            : ""
+                        }
                     </div>
                 `;
-          errorMsg.querySelector(".response-status").textContent =
-            error.message;
-          document.getElementById("responseBody").innerHTML =
-            errorMsg.innerHTML;
+
+          document.getElementById("responseBody").innerHTML = errorContent;
 
           // Show response tab by default
           document.getElementById("responseBody").style.display = "block";
